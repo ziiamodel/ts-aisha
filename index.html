@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-C5MJE6Q098"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-C5MJE6Q098');
+</script>
+
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aisha</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Aisha">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#e8397d">
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Grand+Hotel&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>tailwind.config={darkMode:'class',theme:{extend:{fontFamily:{sans:['Inter','sans-serif']}}}}</script>
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; overflow: hidden; }
+body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+
+/* ── DESIGN TOKENS ───────────────────────────── */
+:root {
+  --surface: #fff5f8;
+  --surface-low: #ffeef4;
+  --surface-var: #ffd6e7;
+  --surface-cont: #ffe4ef;
+  --surface-high: #ffcce3;
+  --on-surface: #3d0a1e;
+  --on-surface-var: #a0527a;
+  --outline-var: #ffc9de;
+  --outline: #f7a8c8;
+  --primary: #e8397d;
+  --primary-soft: #ff6fa3;
+  --on-primary: #ffffff;
+  --like-color: #ff2d6b;
+  --radius-card: 0px;
+  --topbar-h: 56px;
+  --bottomnav-h: 68px;
+  --glow: rgba(232, 57, 125, 0.25);
+  --glow-soft: rgba(255, 111, 163, 0.15);
+}
+.dark {
+  --surface: #1a0010;
+  --surface-low: #220016;
+  --surface-var: #3a0027;
+  --surface-cont: #2d001e;
+  --surface-high: #4a0033;
+  --on-surface: #ffe0ef;
+  --on-surface-var: #d4789f;
+  --outline-var: #5c0040;
+  --outline: #8f1060;
+  --primary: #ff6fa3;
+  --primary-soft: #ffadd0;
+  --on-primary: #1a0010;
+  --like-color: #ff2d6b;
+  --glow: rgba(255, 111, 163, 0.3);
+  --glow-soft: rgba(255, 111, 163, 0.12);
+}
+
+body { background: var(--surface); color: var(--on-surface); }
+
+/* ── PINK AMBIENT BACKGROUND ──────────────────── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 40% at 80% 10%, rgba(232,57,125,.07) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 50% at 10% 80%, rgba(255,111,163,.05) 0%, transparent 55%);
+  animation: ambientShift 8s ease-in-out infinite alternate;
+}
+@keyframes ambientShift {
+  from { opacity: 0.6; }
+  to   { opacity: 1; }
+}
+.dark body::before {
+  background:
+    radial-gradient(ellipse 60% 40% at 80% 10%, rgba(232,57,125,.12) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 50% at 10% 80%, rgba(255,111,163,.08) 0%, transparent 55%);
+}
+
+/* ── SHELL ────────────────────────────────────── */
+#appShell { position: fixed; inset: 0; display: flex; flex-direction: column; }
+
+#topBar {
+  flex-shrink: 0;
+  height: var(--topbar-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--outline-var);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px 0 16px;
+  z-index: 50;
+}
+.dark #topBar { background: rgba(26,0,16,.96); backdrop-filter: blur(12px); }
+
+#appBody { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; background: var(--surface); }
+
+#bottomNav {
+  flex-shrink: 0;
+  height: var(--bottomnav-h);
+  background: var(--surface);
+  border-top: 1px solid var(--outline-var);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 8px;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  z-index: 50;
+}
+.dark #bottomNav { background: rgba(26,0,16,.96); backdrop-filter: blur(12px); }
+
+/* ── LOGO ─────────────────────────────────────── */
+.logo {
+  font-family: 'Grand Hotel', cursive;
+  font-size: 26px;
+  font-weight: 400;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-soft) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  letter-spacing: .02em;
+  animation: logoShimmer 3s ease-in-out infinite;
+}
+@keyframes logoShimmer {
+  0%,100% { filter: drop-shadow(0 0 0px transparent); }
+  50% { filter: drop-shadow(0 0 8px var(--glow)); }
+}
+
+/* ── TOP BAR ACTIONS ─────────────────────────── */
+.top-actions { display: flex; align-items: center; gap: 2px; }
+.icon-btn {
+  background: none; border: none; cursor: pointer;
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--on-surface);
+  transition: background .15s, transform .1s, box-shadow .2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.icon-btn:active { transform: scale(.88); background: var(--surface-var); }
+.icon-btn:hover { box-shadow: 0 0 0 6px var(--glow-soft); }
+
+/* ── TABS ─────────────────────────────────────── */
+.tab-pane { display: none; }
+.tab-pane.active { display: block; animation: fadeUp .28s cubic-bezier(.34,1.56,.64,1); }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+/* ── BOTTOM NAV ──────────────────────────────── */
+.nav-btn {
+  background: none; border: none; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 3px; padding: 6px 16px; border-radius: 14px;
+  color: var(--on-surface-var);
+  transition: color .18s, background .15s, transform .1s, box-shadow .2s;
+  -webkit-tap-highlight-color: transparent;
+  min-width: 56px;
+}
+.nav-btn:active { transform: scale(.9); }
+.nav-btn.active {
+  color: var(--primary);
+  background: var(--glow-soft);
+  box-shadow: 0 0 12px var(--glow);
+  animation: navPop .3s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes navPop { from { transform: scale(.85); } to { transform: scale(1); } }
+.nav-btn .nav-lbl { font-size: 10px; font-weight: 600; letter-spacing: .02em; }
+.nav-btn .material-symbols-outlined { font-size: 24px; }
+.nav-btn.active .material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24; }
+.nav-avatar {
+  width: 24px; height: 24px; border-radius: 50%;
+  border: 2px solid var(--outline-var);
+  overflow: hidden; display: flex; align-items: center; justify-content: center;
+  background: var(--surface-cont); font-size: 10px; font-weight: 700;
+  color: var(--on-surface); transition: border-color .2s, box-shadow .2s;
+}
+.nav-btn.active .nav-avatar { border-color: var(--primary); box-shadow: 0 0 8px var(--glow); }
+
+/* ── POST CARD ──────────────────────────────── */
+.post-card {
+  background: var(--surface);
+  border-bottom: 1px solid var(--outline-var);
+  padding-bottom: 4px;
+  animation: cardEntrance .4s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes cardEntrance {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.post-card:nth-child(1) { animation-delay: 0ms; }
+.post-card:nth-child(2) { animation-delay: 60ms; }
+.post-card:nth-child(3) { animation-delay: 120ms; }
+.post-card:nth-child(4) { animation-delay: 180ms; }
+.post-card:nth-child(5) { animation-delay: 240ms; }
+.post-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 12px 10px 12px;
+}
+.post-creator { display: flex; align-items: center; gap: 10px; }
+.creator-av {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: linear-gradient(135deg, #e8397d 0%, #ffadd0 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(232,57,125,0.35);
+}
+.creator-av::after {
+  content: ''; position: absolute; inset: -2px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff6fa3 0%, #e8397d 100%);
+  z-index: -1;
+  opacity: 0.5;
+}
+.creator-info {}
+.creator-name { font-size: 13px; font-weight: 700; color: var(--on-surface); line-height: 1.2; }
+.creator-sub { font-size: 11px; color: var(--on-surface-var); line-height: 1.2; margin-top: 1px; }
+
+/* ── IMAGE ────────────────────────────────────── */
+.img-wrap {
+  position: relative; aspect-ratio: 1/1;
+  background: var(--surface-cont); overflow: hidden;
+}
+.img-wrap img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: filter .45s, transform .45s;
+  -webkit-user-select: none; user-select: none;
+  pointer-events: none; -webkit-touch-callout: none;
+}
+.img-wrap::after { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.img-wrap { cursor: pointer; }
+.img-wrap.locked img { filter: blur(5px) brightness(.9) saturate(.8); transform: scale(1.08); }
+
+/* ── LOCK OVERLAY ─────────────────────────────── */
+.lock-overlay {
+  position: absolute; inset: 0; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  background: linear-gradient(to bottom, rgba(0,0,0,.05) 0%, rgba(0,0,0,.65) 100%);
+  cursor: pointer; transition: opacity .35s;
+}
+.img-wrap.unlocked .lock-overlay { opacity: 0; pointer-events: none; }
+.lock-ring {
+  width: 60px; height: 60px; border-radius: 50%;
+  border: 1.5px solid rgba(255,182,214,.5);
+  background: rgba(232,57,125,.15);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center; color: #fff;
+  animation: lp 2.8s ease-in-out infinite;
+}
+@keyframes lp {
+  0%,100%{box-shadow:0 0 0 0 rgba(232,57,125,.4)}
+  50%{box-shadow:0 0 0 20px rgba(232,57,125,0)}
+}
+.lock-lbl {
+  font-size: 13px; color: #fff; font-weight: 600;
+  letter-spacing: .04em;
+  background: rgba(232,57,125,.25);
+  backdrop-filter: blur(8px);
+  padding: 6px 16px; border-radius: 99px;
+  border: 1px solid rgba(255,182,214,.3);
+  animation: lblFloat 3s ease-in-out infinite;
+}
+@keyframes lblFloat {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* ── POST BODY ────────────────────────────────── */
+.post-body { padding: 8px 12px 8px; }
+.post-actions { display: flex; align-items: center; gap: 0; margin-bottom: 6px; }
+.like-count { font-size: 13px; font-weight: 700; color: var(--on-surface); margin-left: 2px; min-width: 4px; }
+.like-line { font-size: 13px; color: var(--on-surface-var); margin-bottom: 4px; }
+.caption { font-size: 14px; color: var(--on-surface); line-height: 1.45; margin-bottom: 0; }
+.caption b { font-weight: 700; margin-right: 5px; color: var(--on-surface); }
+.caption-time { font-size: 11px; color: var(--on-surface-var); margin-top: 5px; display: block; }
+
+/* ── ICON BUTTONS ─────────────────────────────── */
+.icon-ghost {
+  background: none; border: none; cursor: pointer;
+  padding: 7px; border-radius: 50%;
+  transition: background .15s, transform .1s;
+  display: flex; align-items: center; justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.icon-ghost:active { transform: scale(.82); background: var(--surface-var); }
+.muted-icon { color: var(--on-surface-var); }
+.icon-ghost.icon-active .like-icon { color: var(--like-color); animation: heartBeat .35s cubic-bezier(.34,1.56,.64,1); }
+.icon-ghost.icon-active .save-icon { color: var(--primary); animation: bookmarkPop .3s cubic-bezier(.34,1.56,.64,1); }
+@keyframes heartBeat {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+@keyframes bookmarkPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3) rotate(-8deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+/* ── MATERIAL ICONS ──────────────────────────── */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal; font-style: normal;
+  font-size: 24px; line-height: 1;
+  letter-spacing: normal; text-transform: none;
+  display: inline-block; white-space: nowrap; direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* ── SECTION LABEL ───────────────────────────── */
+.sec-lbl {
+  font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--on-surface-var); padding: 16px 14px 10px;
+}
+
+/* ── SKELETON LOADING ────────────────────────── */
+.skeleton-card { padding-bottom: 12px; border-bottom: 1px solid var(--outline-var); }
+.skeleton-hdr { display: flex; align-items: center; gap: 10px; padding: 10px 12px; }
+.skel { background: linear-gradient(90deg, var(--surface-cont) 25%, var(--surface-var) 50%, var(--surface-cont) 75%); background-size: 200% 100%; border-radius: 6px; animation: shimmer 1.5s ease-in-out infinite; }
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.skel-av { width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0; }
+.skel-lines { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.skel-line { height: 10px; border-radius: 99px; }
+.skel-img { aspect-ratio: 1/1; width: 100%; }
+.skel-actions { height: 40px; margin: 8px 12px 0; border-radius: 6px; }
+
+/* ── SEARCH ───────────────────────────────────── */
+.search-wrap { padding: 12px 12px 0; }
+.search-input-wrap { position: relative; margin-bottom: 14px; }
+.search-input-wrap .material-symbols-outlined {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  font-size: 20px; color: var(--on-surface-var); pointer-events: none;
+}
+.search-input-wrap input {
+  width: 100%; background: var(--surface-cont);
+  border: 1.5px solid transparent;
+  border-radius: 14px; padding: 11px 16px 11px 44px;
+  font-size: 14px; font-family: 'Inter', sans-serif;
+  color: var(--on-surface); outline: none; transition: border-color .2s, background .2s;
+}
+.search-input-wrap input::placeholder { color: var(--on-surface-var); }
+.search-input-wrap input:focus { border-color: var(--primary); background: var(--surface); box-shadow: 0 0 0 3px var(--glow-soft); }
+.search-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+.s-thumb { aspect-ratio: 1; overflow: hidden; cursor: pointer; position: relative; background: var(--surface-cont); }
+.s-thumb img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform .2s; -webkit-touch-callout: none; user-select: none; pointer-events: none;
+}
+.s-thumb:active img { transform: scale(.96); }
+.s-thumb.locked img { filter: blur(6px) brightness(.6); }
+.s-thumb.locked::after {
+  content: 'lock'; font-family: 'Material Symbols Outlined';
+  font-variation-settings: 'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 20;
+  font-size: 20px; color: rgba(255,255,255,.9);
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  text-shadow: 0 1px 8px rgba(0,0,0,.4);
+}
+.search-empty {
+  text-align: center; padding: 56px 20px; color: var(--on-surface-var); font-size: 14px; line-height: 1.6;
+}
+
+/* ── EMPTY STATES ────────────────────────────── */
+.empty-feed { text-align: center; padding: 72px 24px; color: var(--on-surface-var); }
+.empty-feed .empty-icon { font-size: 52px; display: block; margin-bottom: 16px; opacity: .25; }
+.empty-feed .empty-title { font-size: 16px; font-weight: 700; color: var(--on-surface); margin-bottom: 6px; opacity: .5; }
+.empty-feed p { font-size: 14px; line-height: 1.7; opacity: .6; }
+
+/* ── LIGHTBOX ─────────────────────────────────── */
+.lightbox {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(26,0,16,.98);
+  display: none; flex-direction: column; align-items: center; justify-content: center;
+}
+.lightbox.open { display: flex; animation: lbIn .25s cubic-bezier(.22,1,.36,1); }
+@keyframes lbIn { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: scale(1); } }
+.lb-close {
+  position: absolute; top: 16px; right: 16px;
+  background: rgba(232,57,125,.15); border: 1px solid rgba(232,57,125,.3);
+  border-radius: 50%; width: 44px; height: 44px;
+  color: rgba(255,182,214,.9); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s, box-shadow .2s;
+}
+.lb-close:hover { box-shadow: 0 0 12px rgba(232,57,125,.3); }
+.lb-close:active { background: rgba(232,57,125,.3); }
+.lb-img {
+  max-width: 92vw; max-height: 78vh; object-fit: contain;
+  transform-origin: center; transition: transform .1s;
+  border-radius: 6px;
+  user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; pointer-events: none;
+  box-shadow: 0 8px 40px rgba(0,0,0,.6);
+}
+.lb-img-wrap { position: relative; display: flex; align-items: center; justify-content: center; }
+.lb-img-wrap::after { content: ''; position: absolute; inset: 0; z-index: 1; }
+.lb-cap {
+  position: absolute; bottom: 80px; left: 0; right: 0;
+  text-align: center; padding: 0 32px;
+  color: rgba(255,182,214,.65); font-size: 13px; font-weight: 500;
+}
+.lb-ctrls { position: absolute; bottom: 20px; display: flex; gap: 10px; }
+.lb-btn {
+  background: rgba(232,57,125,.12); border: 1px solid rgba(232,57,125,.25);
+  border-radius: 50%; width: 46px; height: 46px;
+  color: rgba(255,182,214,.9); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s, box-shadow .2s;
+}
+.lb-btn:hover { box-shadow: 0 0 10px rgba(232,57,125,.25); }
+.lb-btn:active { background: rgba(232,57,125,.25); }
+
+/* ── BOTTOM SHEET ─────────────────────────────── */
+.sheet-backdrop {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(26,0,16,.6); backdrop-filter: blur(8px);
+  display: none; align-items: flex-end; justify-content: center;
+}
+.sheet-backdrop.open { display: flex; }
+.sheet {
+  width: 100%; max-width: 480px;
+  background: var(--surface);
+  border-radius: 24px 24px 0 0;
+  padding: 0 20px 40px;
+  animation: su .3s cubic-bezier(.32,.72,0,1);
+  box-shadow: 0 -8px 40px rgba(232,57,125,.12);
+  border-top: 1px solid var(--outline-var);
+}
+@keyframes su { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.sheet-handle {
+  width: 36px; height: 4px; border-radius: 2px;
+  background: var(--outline); margin: 14px auto 20px;
+}
+.sheet-title {
+  font-size: 18px; font-weight: 800; color: var(--on-surface);
+  margin-bottom: 20px; letter-spacing: -.02em;
+}
+
+/* ── AUTH SHEET ──────────────────────────────── */
+.auth-logo { text-align: center; margin-bottom: 4px; }
+.auth-logo span { font-family: 'Grand Hotel', cursive; font-size: 32px; background: linear-gradient(135deg, var(--primary), var(--primary-soft)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.auth-sub { text-align: center; font-size: 13px; color: var(--on-surface-var); margin-bottom: 20px; }
+.auth-tabs {
+  display: flex; gap: 4px; margin-bottom: 20px;
+  background: var(--surface-cont); border-radius: 12px; padding: 3px;
+}
+.a-tab {
+  flex: 1; text-align: center; padding: 9px; border-radius: 10px;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  color: var(--on-surface-var); transition: all .2s;
+  background: none; border: none; font-family: 'Inter', sans-serif;
+}
+.a-tab.active {
+  background: var(--surface); color: var(--primary);
+  box-shadow: 0 1px 6px rgba(232,57,125,.15);
+}
+
+/* ── FORM FIELDS ─────────────────────────────── */
+.fg { margin-bottom: 12px; }
+.fg label {
+  display: block; font-size: 11px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--on-surface-var); margin-bottom: 6px;
+}
+.fg input {
+  width: 100%; background: var(--surface-cont);
+  border: 1.5px solid transparent;
+  border-radius: 12px; padding: 12px 14px;
+  font-size: 15px; font-family: 'Inter', sans-serif;
+  color: var(--on-surface); outline: none; transition: border-color .2s, background .2s;
+}
+.fg input:focus { border-color: var(--primary); background: var(--surface); box-shadow: 0 0 0 3px var(--glow-soft); }
+.fg input::placeholder { color: var(--on-surface-var); }
+.btn-fill {
+  width: 100%; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-soft) 100%);
+  color: #fff;
+  border: none; border-radius: 14px; padding: 14px;
+  font-size: 15px; font-weight: 700; font-family: 'Inter', sans-serif;
+  cursor: pointer; margin-top: 6px;
+  transition: opacity .15s, transform .1s, box-shadow .2s;
+  letter-spacing: .01em;
+  box-shadow: 0 4px 16px var(--glow);
+}
+.btn-fill:active { opacity: .82; transform: scale(.98); }
+.btn-fill:hover { box-shadow: 0 6px 24px var(--glow); }
+.sheet-err {
+  background: rgba(240,62,62,.07); border: 1px solid rgba(240,62,62,.2);
+  color: #c92a2a; border-radius: 10px; padding: 10px 12px;
+  font-size: 13px; margin-bottom: 12px; display: none; line-height: 1.4;
+}
+.dark .sheet-err { color: #ff8787; }
+
+/* ── PROFILE ─────────────────────────────────── */
+.profile-hero {
+  padding: 28px 16px 20px; text-align: center;
+  border-bottom: 1px solid var(--outline-var);
+}
+.profile-big-av {
+  width: 84px; height: 84px; border-radius: 50%;
+  background: linear-gradient(135deg, #e8397d 0%, #ffadd0 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px; font-weight: 800; color: #fff;
+  margin: 0 auto 14px;
+  box-shadow: 0 4px 24px rgba(232,57,125,.4);
+  position: relative;
+  animation: avatarPulse 3s ease-in-out infinite;
+}
+@keyframes avatarPulse {
+  0%,100% { box-shadow: 0 4px 24px rgba(232,57,125,.4); }
+  50% { box-shadow: 0 4px 32px rgba(232,57,125,.65); }
+}
+.profile-big-av::after {
+  content: ''; position: absolute; inset: -3px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255,182,214,.4) 0%, rgba(232,57,125,.15) 100%);
+  z-index: -1;
+}
+.profile-name { font-size: 19px; font-weight: 800; color: var(--on-surface); margin-bottom: 3px; letter-spacing: -.02em; }
+.profile-email { font-size: 13px; color: var(--on-surface-var); }
+.profile-stats { display: flex; justify-content: center; gap: 0; margin-top: 18px; }
+.pstat {
+  text-align: center; flex: 1;
+  padding: 12px 8px;
+  border-right: 1px solid var(--outline-var);
+}
+.pstat:last-child { border-right: none; }
+.pstat-val { font-size: 20px; font-weight: 800; color: var(--on-surface); letter-spacing: -.02em; }
+.pstat-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--on-surface-var); margin-top: 2px; }
+
+.profile-section-lbl {
+  font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--on-surface-var); padding: 16px 16px 8px;
+}
+.profile-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 16px; border-bottom: 1px solid var(--outline-var); cursor: pointer;
+  transition: background .12s;
+}
+.profile-row:active { background: var(--surface-cont); }
+.profile-row-left { display: flex; align-items: center; gap: 14px; }
+.profile-row-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--surface-cont);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.profile-row-icon .material-symbols-outlined { font-size: 20px; color: var(--on-surface-var); }
+.profile-row-label { font-size: 15px; font-weight: 600; color: var(--on-surface); }
+.profile-row-sub { font-size: 12px; color: var(--on-surface-var); margin-top: 1px; }
+.toggle-track {
+  width: 46px; height: 26px; border-radius: 13px;
+  background: var(--outline); position: relative; transition: background .25s;
+  cursor: pointer; flex-shrink: 0;
+}
+.toggle-thumb {
+  position: absolute; top: 3px; left: 3px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: #fff; transition: transform .25s;
+  box-shadow: 0 1px 4px rgba(0,0,0,.2);
+}
+.dark .toggle-track { background: var(--primary); box-shadow: 0 0 8px var(--glow); }
+.dark .toggle-thumb { transform: translateX(20px); background: #fff; }
+
+.profile-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; padding: 2px 0; }
+.pf-thumb { aspect-ratio: 1; overflow: hidden; cursor: pointer; position: relative; background: var(--surface-cont); }
+.pf-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .2s; -webkit-touch-callout: none; user-select: none; pointer-events: none; }
+.pf-thumb:active img { transform: scale(.96); }
+.pf-thumb.locked img { filter: blur(6px) brightness(.6); }
+.pf-thumb.locked::after {
+  content: 'lock'; font-family: 'Material Symbols Outlined';
+  font-variation-settings: 'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 20;
+  font-size: 18px; color: rgba(255,255,255,.85);
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+}
+.profile-tabs { display: flex; border-bottom: 1px solid var(--outline-var); }
+.profile-tab {
+  flex: 1; padding: 13px; text-align: center;
+  font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--on-surface-var); cursor: pointer;
+  border-bottom: 2px solid transparent; transition: all .2s;
+}
+.profile-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+.profile-tab-pane { display: none; }
+.profile-tab-pane.active { display: block; }
+
+/* ── CHANGE PASSWORD ─────────────────────────── */
+.chpw-err {
+  background: rgba(240,62,62,.07); border: 1px solid rgba(240,62,62,.2);
+  color: #c92a2a; border-radius: 10px; padding: 10px 12px;
+  font-size: 13px; margin-bottom: 12px; display: none;
+}
+.chpw-ok {
+  background: rgba(0,180,90,.07); border: 1px solid rgba(0,180,90,.2);
+  color: #007a3a; border-radius: 10px; padding: 10px 12px;
+  font-size: 13px; margin-bottom: 12px; display: none;
+}
+.dark .chpw-err { color: #ff8787; }
+.dark .chpw-ok { color: #40d98b; }
+
+/* ── TOAST ────────────────────────────────────── */
+.toast {
+  position: fixed; bottom: calc(var(--bottomnav-h) + 14px + env(safe-area-inset-bottom, 0));
+  left: 50%; transform: translateX(-50%) translateY(16px);
+  background: linear-gradient(135deg, #e8397d, #ff6fa3);
+  color: #fff;
+  padding: 10px 18px 10px 14px; border-radius: 99px;
+  font-size: 13px; font-weight: 600; opacity: 0;
+  transition: all .32s cubic-bezier(.34,1.56,.64,1);
+  z-index: 999; white-space: nowrap;
+  box-shadow: 0 4px 24px rgba(232,57,125,.4);
+  display: flex; align-items: center; gap: 7px;
+  max-width: 90vw;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast .material-symbols-outlined { font-size: 17px; font-variation-settings: 'FILL' 1,'wght' 500,'GRAD' 0,'opsz' 24; }
+
+
+/* ── INFINITE SCROLL ─────────────────────────── */
+.feed-sentinel {
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px 0; min-height: 64px;
+}
+.load-more-spinner {
+  width: 22px; height: 22px;
+  border: 2.5px solid var(--surface-var);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  display: none;
+  box-shadow: 0 0 8px var(--glow-soft);
+}
+.feed-sentinel.loading .load-more-spinner { display: block; }
+.feed-end-lbl {
+  font-size: 12px; color: var(--on-surface-var); opacity: .5;
+  display: none; letter-spacing: .04em;
+}
+.feed-sentinel.done .feed-end-lbl { display: block; }
+
+/* ── MISC ─────────────────────────────────────── */
+img { -webkit-user-drag: none; user-select: none; }
+
+/* ── PULL TO REFRESH ─────────────────────────── */
+#ptr-indicator {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  height: 0; overflow: hidden;
+  background: var(--surface-cont); color: var(--on-surface-var);
+  font-size: 13px; font-weight: 500;
+  border-bottom: 1px solid var(--outline-var);
+  will-change: height;
+}
+#ptr-indicator.snap-back { transition: height .25s ease; }
+#ptr-spinner {
+  width: 18px; height: 18px; border: 2px solid var(--outline-var);
+  border-top-color: var(--primary); border-radius: 50%;
+  animation: spin .7s linear infinite; display: none; flex-shrink: 0;
+}
+#ptr-arrow { font-size: 20px; transition: transform .25s; color: var(--on-surface-var); flex-shrink: 0; }
+#ptr-indicator.ptr-loading #ptr-spinner { display: block; }
+#ptr-indicator.ptr-loading #ptr-arrow { display: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── OFFLINE OVERLAY ──────────────────────────── */
+#offlineOverlay {
+  position: fixed; inset: 0; z-index: 2000; background: #1a0010;
+  display: none; flex-direction: column; align-items: center; justify-content: center;
+  padding: 32px 24px; text-align: center; gap: 0;
+}
+#offlineOverlay .ol-logo { font-family: 'Grand Hotel', cursive; font-size: 30px; background: linear-gradient(135deg, #e8397d, #ffadd0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 48px; opacity: .9; }
+#offlineOverlay .ol-icon-wrap {
+  width: 88px; height: 88px; border-radius: 50%;
+  border: 1.5px solid rgba(232,57,125,.2);
+  background: rgba(232,57,125,.08);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 24px; animation: olPulse 2.5s ease-in-out infinite;
+}
+@keyframes olPulse { 0%,100%{box-shadow:0 0 0 0 rgba(232,57,125,.15)} 50%{box-shadow:0 0 0 20px rgba(232,57,125,0)} }
+#offlineOverlay h2 { font-size: 20px; font-weight: 800; color: #ffe0ef; margin-bottom: 8px; }
+#offlineOverlay p { font-size: 14px; color: rgba(255,182,214,.4); line-height: 1.6; max-width: 260px; margin: 0 auto 32px; }
+#offlineOverlay .ol-retry {
+  background: linear-gradient(135deg, #e8397d, #ff6fa3); color: #fff; border: none; border-radius: 99px;
+  padding: 12px 32px; font-size: 14px; font-weight: 700;
+  font-family: 'Inter', sans-serif; cursor: pointer; transition: opacity .15s, box-shadow .2s;
+  box-shadow: 0 4px 16px rgba(232,57,125,.4);
+}
+#offlineOverlay .ol-retry:active { opacity: .8; }
+#offlineOverlay .ol-dots { display: flex; gap: 6px; margin-top: 48px; }
+#offlineOverlay .ol-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(232,57,125,.35); animation: olBlink 1.4s ease-in-out infinite; }
+#offlineOverlay .ol-dot:nth-child(2){animation-delay:.2s;}
+#offlineOverlay .ol-dot:nth-child(3){animation-delay:.4s;}
+@keyframes olBlink { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
+
+/* ── PWA INSTALL BANNER ───────────────────────── */
+#pwaBar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 1500;
+  background: var(--surface); border-top: 1px solid var(--outline-var);
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom,0));
+  display: none; align-items: center; gap: 10px;
+  box-shadow: 0 -4px 20px rgba(0,0,0,.08);
+}
+#pwaBar.visible { display: flex; }
+#pwaBar .pb-close { background: none; border: none; cursor: pointer; color: var(--on-surface-var); padding: 6px; display: flex; align-items: center; flex-shrink: 0; }
+#pwaBar .pb-icon { width: 44px; height: 44px; border-radius: 10px; overflow: hidden; flex-shrink: 0; }
+#pwaBar .pb-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
+#pwaBar .pb-text { flex: 1; min-width: 0; overflow: hidden; }
+#pwaBar .pb-name { font-size: 14px; font-weight: 700; color: var(--on-surface); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#pwaBar .pb-sub { font-size: 11px; color: var(--on-surface-var); margin-top: 1px; }
+#pwaBar .pb-btn { background: linear-gradient(135deg, var(--primary), var(--primary-soft)); color: #fff; border: none; border-radius: 99px; padding: 9px 20px; font-size: 13px; font-weight: 700; font-family: 'Inter', sans-serif; cursor: pointer; flex-shrink: 0; transition: opacity .15s, box-shadow .2s; box-shadow: 0 2px 10px var(--glow); }
+#pwaBar .pb-btn:active { opacity: .8; }
+#iosPwaBar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 1500;
+  background: var(--surface); border-top: 1px solid var(--outline-var);
+  padding: 12px 16px calc(16px + env(safe-area-inset-bottom,0));
+  display: none; flex-direction: column; align-items: center; gap: 6px; text-align: center;
+}
+#iosPwaBar.visible { display: flex; }
+#iosPwaBar .ipb-close { position: absolute; top: 10px; right: 12px; background: none; border: none; cursor: pointer; color: var(--on-surface-var); padding: 4px; display: flex; }
+#iosPwaBar .ipb-row { display: flex; align-items: center; gap: 10px; }
+#iosPwaBar .ipb-icon { width: 40px; height: 40px; border-radius: 9px; overflow: hidden; flex-shrink: 0; }
+#iosPwaBar .ipb-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
+#iosPwaBar .ipb-name { font-size: 14px; font-weight: 700; color: var(--on-surface); }
+#iosPwaBar .ipb-desc { font-size: 12px; color: var(--on-surface-var); line-height: 1.5; }
+#iosPwaBar .ipb-desc b { color: var(--on-surface); }
+
+/* ── DOWNLOAD APP POPUP ───────────────────────── */
+#dlPopupOverlay {
+  position: fixed; inset: 0; z-index: 1800;
+  background: rgba(26,0,16,.55); backdrop-filter: blur(6px);
+  display: none; align-items: center; justify-content: center;
+  padding: 20px;
+}
+#dlPopupOverlay.show { display: flex; animation: dlFadeIn .3s ease; }
+@keyframes dlFadeIn { from { opacity: 0; } to { opacity: 1; } }
+#dlPopup {
+  background: var(--surface);
+  border-radius: 28px;
+  padding: 32px 24px 28px;
+  width: 100%; max-width: 340px;
+  text-align: center;
+  box-shadow: 0 24px 64px rgba(232,57,125,.22), 0 0 0 1px var(--outline-var);
+  position: relative;
+  animation: dlSlideUp .35s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes dlSlideUp { from { opacity:0; transform:translateY(40px) scale(.95); } to { opacity:1; transform:translateY(0) scale(1); } }
+#dlPopup .dl-close {
+  position: absolute; top: 14px; right: 14px;
+  background: var(--surface-cont); border: none; cursor: pointer;
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--on-surface-var); transition: background .15s;
+}
+#dlPopup .dl-close:active { background: var(--surface-var); }
+#dlPopup .dl-icon-wrap {
+  width: 88px; height: 88px; border-radius: 22px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-soft) 100%);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+  box-shadow: 0 8px 28px var(--glow);
+  animation: dlIconPulse 2.8s ease-in-out infinite;
+  overflow: hidden;
+}
+@keyframes dlIconPulse { 0%,100%{box-shadow:0 8px 28px var(--glow);} 50%{box-shadow:0 8px 40px rgba(232,57,125,.5);} }
+#dlPopup .dl-icon-wrap img { width:100%; height:100%; object-fit:cover; display:block; }
+#dlPopup .dl-icon-fallback { font-family:"Grand Hotel",cursive; font-size:38px; background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,.75) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+#dlPopup .dl-title { font-size:20px; font-weight:800; color:var(--on-surface); letter-spacing:-.02em; margin-bottom:6px; }
+#dlPopup .dl-sub { font-size:13px; color:var(--on-surface-var); line-height:1.55; margin-bottom:24px; }
+#dlPopup .dl-btn {
+  width:100%; background:linear-gradient(135deg,var(--primary) 0%,var(--primary-soft) 100%);
+  color:#fff; border:none; border-radius:16px;
+  padding:15px 20px; font-size:15px; font-weight:700;
+  font-family:"Inter",sans-serif; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  box-shadow:0 6px 20px var(--glow);
+  transition:opacity .15s,transform .1s,box-shadow .2s;
+  margin-bottom:10px;
+}
+#dlPopup .dl-btn:active { opacity:.85; transform:scale(.98); }
+#dlPopup .dl-skip { font-size:12px; color:var(--on-surface-var); background:none; border:none; cursor:pointer; padding:6px 12px; border-radius:8px; font-family:"Inter",sans-serif; transition:color .15s; }
+#dlPopup .dl-ios-hint { font-size:12px; color:var(--on-surface-var); line-height:1.6; background:var(--surface-cont); border-radius:12px; padding:10px 14px; margin-bottom:10px; }
+#dlPopup .dl-ios-hint b { color:var(--on-surface); }
+</style>
+</head>
+<body>
+<div id="appShell">
+
+  <header id="topBar">
+    <div class="logo">Aisha</div>
+    <div class="top-actions">
+      <button class="icon-btn" onclick="toggleTheme()" aria-label="Toggle theme" id="themeBtn">
+        <span class="material-symbols-outlined" id="themeIcon" style="font-size:22px">dark_mode</span>
+      </button>
+    </div>
+  </header>
+
+  <div id="appBody">
+    <div id="ptr-indicator">
+      <span id="ptr-arrow" class="material-symbols-outlined">arrow_downward</span>
+      <div id="ptr-spinner"></div>
+      <span id="ptr-text">Pull to refresh</span>
+    </div>
+
+    <!-- HOME -->
+    <div class="tab-pane active" id="tab-home">
+      <div id="homeLoading">
+        <div class="skeleton-card">
+          <div class="skeleton-hdr"><div class="skel skel-av"></div><div class="skel-lines"><div class="skel skel-line" style="width:55%"></div><div class="skel skel-line" style="width:35%"></div></div></div>
+          <div class="skel skel-img"></div>
+          <div class="skel skel-actions" style="margin:10px 12px 0"></div>
+        </div>
+        <div class="skeleton-card">
+          <div class="skeleton-hdr"><div class="skel skel-av"></div><div class="skel-lines"><div class="skel skel-line" style="width:60%"></div><div class="skel skel-line" style="width:30%"></div></div></div>
+          <div class="skel skel-img"></div>
+          <div class="skel skel-actions" style="margin:10px 12px 0"></div>
+        </div>
+      </div>
+      <div id="homeFeed"></div>
+      <div class="empty-feed" id="homeEmpty" style="display:none">
+        <span class="material-symbols-outlined empty-icon" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 48">photo_camera</span>
+        <div class="empty-title">No photos yet</div>
+        <p>Check back soon.</p>
+      </div>
+      <div class="feed-sentinel" id="homeSentinel">
+        <div class="load-more-spinner"></div>
+        <span class="feed-end-lbl">You're all caught up</span>
+      </div>
+    </div>
+
+    <!-- NEW -->
+    <div class="tab-pane" id="tab-new">
+      <div class="sec-lbl">Latest</div>
+      <div id="newFeed"></div>
+      <div class="empty-feed" id="newEmpty" style="display:none">
+        <span class="material-symbols-outlined empty-icon" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 48">local_fire_department</span>
+        <div class="empty-title">Nothing new yet</div>
+        <p>New posts will appear here.</p>
+      </div>
+      <div class="feed-sentinel" id="newSentinel">
+        <div class="load-more-spinner"></div>
+        <span class="feed-end-lbl">You're all caught up</span>
+      </div>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="tab-pane" id="tab-search">
+      <div class="search-wrap">
+        <div class="search-input-wrap">
+          <span class="material-symbols-outlined">search</span>
+          <input type="text" id="searchInput" placeholder="Search photos…" oninput="doSearch(this.value)" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="search-grid" id="searchGrid"></div>
+        <div class="search-empty" id="searchEmpty" style="display:none">No results found.</div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="tab-pane" id="tab-profile">
+      <div id="profileGuest">
+        <div class="empty-feed" style="padding-top:72px">
+          <span class="material-symbols-outlined empty-icon" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 48">account_circle</span>
+          <div class="empty-title">Your Profile</div>
+          <p style="margin-bottom:24px">Sign in to view your profile,<br>liked &amp; saved photos.</p>
+          <button class="btn-fill" style="max-width:220px;margin:0 auto;display:block" onclick="openAuth()">Sign in / Sign up</button>
+        </div>
+      </div>
+      <div id="profileUser" style="display:none">
+        <div class="profile-hero">
+          <div class="profile-big-av" id="profileBigAv">A</div>
+          <div class="profile-name" id="profileName"></div>
+          <div class="profile-email" id="profileEmailTxt"></div>
+          <div class="profile-stats">
+            <div class="pstat"><div class="pstat-val" id="statLiked">0</div><div class="pstat-lbl">Liked</div></div>
+            <div class="pstat"><div class="pstat-val" id="statSaved">0</div><div class="pstat-lbl">Saved</div></div>
+            <div class="pstat"><div class="pstat-val" id="statPosts">0</div><div class="pstat-lbl">Posts</div></div>
+          </div>
+        </div>
+
+        <div class="profile-section-lbl">Settings</div>
+        <div class="profile-row" onclick="toggleTheme()">
+          <div class="profile-row-left">
+            <div class="profile-row-icon"><span class="material-symbols-outlined" id="themeRowIcon">dark_mode</span></div>
+            <div>
+              <div class="profile-row-label">Dark Mode</div>
+              <div class="profile-row-sub">Switch appearance</div>
+            </div>
+          </div>
+          <div class="toggle-track" onclick="toggleTheme();event.stopPropagation()"><div class="toggle-thumb"></div></div>
+        </div>
+        <div class="profile-row" onclick="openChPw()">
+          <div class="profile-row-left">
+            <div class="profile-row-icon"><span class="material-symbols-outlined">lock_reset</span></div>
+            <div>
+              <div class="profile-row-label">Change Password</div>
+              <div class="profile-row-sub">Update your password</div>
+            </div>
+          </div>
+          <span class="material-symbols-outlined muted-icon" style="font-size:20px">chevron_right</span>
+        </div>
+
+        <div class="profile-section-lbl" style="margin-top:4px">Your Photos</div>
+        <div class="profile-tabs">
+          <div class="profile-tab active" onclick="switchProfileTab('liked',this)">
+            <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;margin-right:4px">favorite</span>Liked
+          </div>
+          <div class="profile-tab" onclick="switchProfileTab('saved',this)">
+            <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;margin-right:4px">bookmark</span>Saved
+          </div>
+        </div>
+        <div class="profile-tab-pane active" id="ptab-liked">
+          <div id="likedGridWrap"><div style="text-align:center;padding:32px 20px;color:var(--on-surface-var);font-size:14px">No liked photos yet.</div></div>
+        </div>
+        <div class="profile-tab-pane" id="ptab-saved">
+          <div id="savedGridWrap"><div style="text-align:center;padding:32px 20px;color:var(--on-surface-var);font-size:14px">No saved photos yet.<br><span style="font-size:12px;opacity:.6">Tap the bookmark icon on any post.</span></div></div>
+        </div>
+
+        <div class="profile-section-lbl" style="margin-top:4px">Account</div>
+        <div class="profile-row" onclick="doLogout()">
+          <div class="profile-row-left">
+            <div class="profile-row-icon" style="background:rgba(240,62,62,.08)"><span class="material-symbols-outlined" style="color:#e03131">logout</span></div>
+            <div class="profile-row-label" style="color:#e03131">Sign Out</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav id="bottomNav">
+    <button class="nav-btn active" id="nav-home" onclick="switchTab('home')">
+      <span class="material-symbols-outlined">home</span>
+      <span class="nav-lbl">Home</span>
+    </button>
+    <button class="nav-btn" id="nav-new" onclick="switchTab('new')">
+      <span class="material-symbols-outlined">local_fire_department</span>
+      <span class="nav-lbl">Latest</span>
+    </button>
+    <button class="nav-btn" id="nav-search" onclick="switchTab('search')">
+      <span class="material-symbols-outlined">search</span>
+      <span class="nav-lbl">Search</span>
+    </button>
+    <button class="nav-btn" id="nav-profile" onclick="switchTab('profile')">
+      <div class="nav-avatar" id="navAvatarWrap">
+        <span class="material-symbols-outlined" style="font-size:16px">person</span>
+      </div>
+      <span class="nav-lbl">Profile</span>
+    </button>
+  </nav>
+</div>
+
+<!-- OFFLINE OVERLAY -->
+<div id="offlineOverlay">
+  <div class="ol-logo">Aisha</div>
+  <div class="ol-icon-wrap">
+    <span class="material-symbols-outlined" style="font-size:40px;color:rgba(255,255,255,.4);font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 48">wifi_off</span>
+  </div>
+  <h2>You're Offline</h2>
+  <p>No internet connection detected. Check your connection and try again.</p>
+  <button class="ol-retry" onclick="window.location.reload()">Try again</button>
+  <div class="ol-dots">
+    <div class="ol-dot"></div><div class="ol-dot"></div><div class="ol-dot"></div>
+  </div>
+</div>
+
+<!-- PWA BAR -->
+<div id="pwaBar">
+  <button class="pb-close" onclick="dismissPWA()" aria-label="Close">
+    <span class="material-symbols-outlined" style="font-size:20px">close</span>
+  </button>
+  <div class="pb-icon"><img src="/icon-192.png" alt="Aisha"></div>
+  <div class="pb-text">
+    <div class="pb-name">Aisha</div>
+    <div class="pb-sub">Get the app — faster &amp; works offline</div>
+  </div>
+  <button class="pb-btn" onclick="doInstallPWA()">Install</button>
+</div>
+<div id="iosPwaBar">
+  <button class="ipb-close" onclick="dismissIOSPwa()" aria-label="Close">
+    <span class="material-symbols-outlined" style="font-size:20px">close</span>
+  </button>
+  <div class="ipb-row">
+    <div class="ipb-icon"><img src="/icon-192.png" alt="Aisha"></div>
+    <div class="ipb-name">Get the Aisha app</div>
+  </div>
+  <div class="ipb-desc">Tap <b>Share ⎙</b> then <b>"Add to Home Screen"</b></div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" onclick="closeLb()"><span class="material-symbols-outlined" style="font-size:22px">close</span></button>
+  <div class="lb-img-wrap">
+    <img id="lbImg" class="lb-img" src="" alt="" draggable="false" ondragstart="return false" oncontextmenu="return false">
+  </div>
+  <div class="lb-cap" id="lbCap"></div>
+  <div class="lb-ctrls">
+    <button class="lb-btn" onclick="lbZ(-.3)"><span class="material-symbols-outlined" style="font-size:22px">zoom_out</span></button>
+    <button class="lb-btn" onclick="lbR()"><span class="material-symbols-outlined" style="font-size:22px">center_focus_strong</span></button>
+    <button class="lb-btn" onclick="lbZ(.3)"><span class="material-symbols-outlined" style="font-size:22px">zoom_in</span></button>
+  </div>
+</div>
+
+<!-- AUTH SHEET -->
+<div class="sheet-backdrop" id="authSheet" onclick="closeBgAuth(event)">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="auth-logo"><span>Aisha</span></div>
+    <div class="auth-sub">Sign in to unlock &amp; interact with photos</div>
+    <div class="auth-tabs">
+      <button class="a-tab active" id="atab-in" onclick="swAuthTab('in')">Sign in</button>
+      <button class="a-tab" id="atab-up" onclick="swAuthTab('up')">Create account</button>
+    </div>
+    <div class="sheet-err" id="authErr"></div>
+    <div id="formIn">
+      <div class="fg"><label>Email</label><input type="email" id="siEmail" placeholder="you@example.com" autocomplete="email"></div>
+      <div class="fg"><label>Password</label><input type="password" id="siPass" placeholder="••••••••" autocomplete="current-password"></div>
+      <button class="btn-fill" onclick="doSignIn()">Sign in</button>
+    </div>
+    <div id="formUp" style="display:none">
+      <div class="fg"><label>Username</label><input type="text" id="suUser" placeholder="yourname" autocomplete="username"></div>
+      <div class="fg"><label>Email</label><input type="email" id="suEmail" placeholder="you@example.com" autocomplete="email"></div>
+      <div class="fg"><label>Password</label><input type="password" id="suPass" placeholder="Min 6 characters" autocomplete="new-password"></div>
+      <button class="btn-fill" onclick="doSignUp()">Create account</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHANGE PASSWORD SHEET -->
+<div class="sheet-backdrop" id="chpwSheet" onclick="closeBgChpw(event)">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Change Password</div>
+    <div class="chpw-err" id="chpwErr"></div>
+    <div class="chpw-ok"  id="chpwOk"></div>
+    <div class="fg"><label>Current Password</label><input type="password" id="cpCur" placeholder="Current password"></div>
+    <div class="fg"><label>New Password</label><input type="password" id="cpNew" placeholder="Min 6 characters"></div>
+    <div class="fg"><label>Confirm New Password</label><input type="password" id="cpCon" placeholder="Repeat new password"></div>
+    <button class="btn-fill" onclick="doChPw()">Update Password</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="material-symbols-outlined" id="toastIco">check_circle</span>
+  <span id="toastMsg"></span>
+</div>
+
+<!-- DOWNLOAD APP POPUP -->
+<div id="dlPopupOverlay">
+  <div id="dlPopup">
+    <button class="dl-close" onclick="closeDlPopup()" aria-label="Close"><span class="material-symbols-outlined" style="font-size:18px">close</span></button>
+    <div class="dl-icon-wrap"><img src="/icon-192.png" alt="Aisha" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="dl-icon-fallback" style="display:none">Aisha</span></div>
+    <div class="dl-title">Get the Aisha App</div>
+    <div class="dl-sub">Install for the best experience &mdash; faster, works offline &amp; no browser bars.</div>
+    <div id="dlIosHint" class="dl-ios-hint" style="display:none">Tap <b>Share &#9049;</b> then tap <b>"Add to Home Screen"</b> to install.</div>
+    <button class="dl-btn" id="dlInstallBtn" onclick="doDlInstall()"><span class="material-symbols-outlined" style="font-size:20px;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24">download</span>Download App</button>
+    <button class="dl-skip" onclick="closeDlPopup()">Maybe later</button>
+  </div>
+</div>
+
+<script src="app.js" defer></script>
+
+
+</body>
+</html>

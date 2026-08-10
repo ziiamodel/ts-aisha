@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Aisha — Offline</title>
+<link href="https://fonts.googleapis.com/css2?family=Grand+Hotel&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;background:#111;color:#e8e8e8;font-family:'Inter',sans-serif;overflow:hidden;}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;gap:0;}
+.logo{font-family:'Grand Hotel',cursive;font-size:32px;color:#fff;margin-bottom:48px;opacity:.9;}
+.icon-wrap{width:96px;height:96px;border-radius:50%;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;margin:0 auto 28px;animation:pulse 2.5s ease-in-out infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.12)}50%{box-shadow:0 0 0 18px rgba(255,255,255,0)}}
+.wifi-icon{font-size:42px;opacity:.5;}
+h1{font-size:22px;font-weight:700;color:#fff;margin-bottom:10px;}
+p{font-size:14px;color:rgba(255,255,255,.5);line-height:1.6;max-width:280px;margin:0 auto 36px;}
+.retry-btn{background:#fff;color:#111;border:none;border-radius:99px;padding:13px 32px;font-size:15px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:opacity .15s;}
+.retry-btn:active{opacity:.8;}
+.dots{display:flex;gap:6px;justify-content:center;margin-top:48px;}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);animation:blink 1.4s ease-in-out infinite;}
+.dot:nth-child(2){animation-delay:.2s;}
+.dot:nth-child(3){animation-delay:.4s;}
+@keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+</style>
+</head>
+<body>
+<div class="logo">Aisha</div>
+<div class="icon-wrap">
+  <svg class="wifi-icon" xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 96 960 960" width="48" fill="rgba(255,255,255,0.5)">
+    <path d="M790 981 624 815q-35 13-74.5 20T480 842q-131 0-241-66.5T73 600q-6-11-1.5-22.5T86 563q11-6 22.5-1.5T123 576q72 112 183 171t174 51q26 0 51-4t49-11L428 631q-20 3-39 9.5T351 657L218 524q28-21 58.5-36.5T341 460L153 272q-9-9-9-21t9-21q9-9 21-9t21 9l637 637q9 9 9 21t-9 21q-9 9-21 9t-21-9ZM885 606q-6 11-17.5 14.5T846 617q-11-6-14-17.5t3-22.5q13-19 17-37.5t4-39.5q0-130-93-221.5T537 187q-21 0-41.5 2.5T455 197q-12 3-22.5-2T419 178q-3-12 2-22.5t17-13.5q25-7 50.5-10.5T537 128q155 0 266 108.5T914 501q0 27-5.5 53T885 606Zm-209-1q-6 11-18 14t-22-3q-11-6-13.5-18t3.5-23q5-11 7.5-23t2.5-24q0-62-44-105T483 381q-13 0-25.5 2T432 390q-12 3-22-3t-13-18q-3-12 3-22t18-13q15-5 30.5-7.5T481 324q88 0 148.5 63.5T690 541q0 17-3 33t-11 31Z"/>
+  </svg>
+</div>
+<h1>You're Offline</h1>
+<p>No internet connection found. Check your connection and try again.</p>
+<button class="retry-btn" onclick="window.location.reload()">Try again</button>
+<div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+</body>
+</html>

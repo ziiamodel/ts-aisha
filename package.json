@@ -1,0 +1,12 @@
+{
+  "name": "aisha-app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "node build.js"
+  },
+  "devDependencies": {
+    "terser": "^5.31.0",
+    "javascript-obfuscator": "^4.1.1"
+  }
+}

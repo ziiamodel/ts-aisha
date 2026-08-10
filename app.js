@@ -467,50 +467,31 @@ function updateNavAvatar(loggedIn, u) {
     : `<span class="material-symbols-outlined" style="font-size:16px">person</span>`;
 }
 
+
+
 // ── LIGHTBOX ───────────────────────────────────
 /* ── AD SYSTEM ────────────────────────────────────────────────────────── */
-const AD_LINKS = [
-  'https://www.effectivecpmnetwork.com/hjqx73wyma?key=985e37959eeb62a24a0ff6492cb2ad80',
-  'https://www.effectivecpmnetwork.com/hjqx73wyma?key=985e37959eeb62a24a0ff6492cb2ad80',
-  'https://www.effectivecpmnetwork.com/hjqx73wyma?key=985e37959eeb62a24a0ff6492cb2ad80',
-  'https://www.effectivecpmnetwork.com/hjqx73wyma?key=985e37959eeb62a24a0ff6492cb2ad80',
-  'https://www.effectivecpmnetwork.com/hjqx73wyma?key=985e37959eeb62a24a0ff6492cb2ad80',
-  'https://www.effectivecpmnetwork.com/hjqx73wyma?key=985e37959eeb62a24a0ff6492cb2ad80',
-  'https://www.effectivecpmnetwork.com/hjqx73wyma?key=985e37959eeb62a24a0ff6492cb2ad80',
-  'https://www.effectivecpmnetwork.com/hjqx73wyma?key=985e37959eeb62a24a0ff6492cb2ad80',
-  'https://www.effectivecpmnetwork.com/hjqx73wyma?key=985e37959eeb62a24a0ff6492cb2ad80',
-  'https://www.effectivecpmnetwork.com/hjqx73wyma?key=985e37959eeb62a24a0ff6492cb2ad80',
-];
-const AD_EVERY_N_TAPS   = 2;   // fire ad every 2nd photo tap
-const AD_MAX_PER_SESSION = 10;  // max 10 ad fires per session
+const AD_EVERY_N_TAPS    = 2;    // fire ad every 2nd photo tap
+const AD_MAX_PER_SESSION = 10;   // max 10 ad fires per session
 const AD_MIN_GAP_MS      = 15000; // at least 15 sec between fires
 
-let _adTapCount   = 0;
+let _adTapCount     = 0;
 let _adSessionCount = parseInt(sessionStorage.getItem('_asc') || '0');
-let _adLastFired  = parseInt(sessionStorage.getItem('_alf') || '0');
-let _adQueue = JSON.parse(sessionStorage.getItem('_adq') || '[]');
+let _adLastFired    = parseInt(sessionStorage.getItem('_alf') || '0');
 
-function _shuffleArray(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+async function _getAdLink() {
+  try {
+    const res = await fetch('/api/get-ad-link');
+    const data = await res.json();
+    return data.url;
+  } catch {
+    return null;
   }
-  return a;
 }
-
-function _getAdLink() {
-  if (!_adQueue.length) {
-    _adQueue = _shuffleArray(AD_LINKS);
-  }
-  const link = _adQueue.shift();
-  sessionStorage.setItem('_adq', JSON.stringify(_adQueue));
-  return link;
-}
-
 /* ── END AD SYSTEM ───────────────────────────────────────────────────── */
 
-function openLightboxById(id) {
+
+async function openLightboxById(id) {
   _adTapCount++;
 
   const shouldAd =
@@ -519,19 +500,18 @@ function openLightboxById(id) {
     (Date.now() - _adLastFired >= AD_MIN_GAP_MS);
 
   if (shouldAd) {
-    const adUrl = _getAdLink();
-    _adSessionCount++;
-    _adLastFired = Date.now();
-    sessionStorage.setItem('_asc', _adSessionCount);
-    sessionStorage.setItem('_alf', _adLastFired);
+    const adUrl = await _getAdLink();
+    if (adUrl) {
+      _adSessionCount++;
+      _adLastFired = Date.now();
+      sessionStorage.setItem('_asc', _adSessionCount);
+      sessionStorage.setItem('_alf', _adLastFired);
 
-    const newTab = window.open(window.location.href, '_blank');
-    if (newTab) {
+      window.open(window.location.href, '_blank');
       window.location.href = adUrl;
-    } else {
-      window.location.href = adUrl;
+      return;
     }
-    return;
+    // if the ad fetch failed, fall through to open the lightbox normally
   }
 
   // no ad — open lightbox normally
@@ -541,6 +521,9 @@ function openLightboxById(id) {
   lbScale = 1; document.getElementById('lbImg').style.transform = 'scale(1)';
   document.getElementById('lightbox').classList.add('open');
 }
+
+
+
 function closeLb() { document.getElementById('lightbox').classList.remove('open'); }
 function lbZ(d) { lbScale = Math.min(5, Math.max(.4, lbScale + d)); document.getElementById('lbImg').style.transform = `scale(${lbScale})`; }
 function lbR() { lbScale = 1; document.getElementById('lbImg').style.transform = 'scale(1)'; }
